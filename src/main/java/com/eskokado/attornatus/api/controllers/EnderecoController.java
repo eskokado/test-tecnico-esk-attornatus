@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/enderecos")
 public class EnderecoController {
@@ -20,5 +22,10 @@ public class EnderecoController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/pessoa/{pessoaId}")
+    public List<Endereco> listarEnderecosDaPessoa(@PathVariable Long pessoaId) {
+        return enderecoService.listarEnderecosDaPessoa(pessoaId);
     }
 }
