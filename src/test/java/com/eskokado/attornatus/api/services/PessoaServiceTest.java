@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PessoaServiceTest {
@@ -56,5 +57,22 @@ public class PessoaServiceTest {
 
         assertEquals("Maria Silva", pessoaEditada.getNome());
         assertEquals(LocalDate.of(1985, 10, 21), pessoaEditada.getDataNascimento());
+    }
+
+    @Test
+    public void testConsultarPessoa() {
+        Long pessoaId = 1L;
+        Pessoa pessoaExistente = new Pessoa();
+        pessoaExistente.setId(pessoaId);
+        pessoaExistente.setNome("Carlos");
+        pessoaExistente.setDataNascimento(LocalDate.of(1998, 3, 10));
+
+        Mockito.when(pessoaRepository.findById(pessoaId)).thenReturn(Optional.of(pessoaExistente));
+
+        Pessoa pessoaConsultada = pessoaService.consultarPessoa(pessoaId);
+
+        assertNotNull(pessoaConsultada);
+        assertEquals("Carlos", pessoaConsultada.getNome());
+        assertEquals(LocalDate.of(1998, 3, 10), pessoaConsultada.getDataNascimento());
     }
 }
