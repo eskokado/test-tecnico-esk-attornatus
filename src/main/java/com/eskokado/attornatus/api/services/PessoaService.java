@@ -24,4 +24,8 @@ public class PessoaService {
             return null;
         }
     }
+
+    public Pessoa consultarPessoa(Long id) {
+        return pessoaRepository.findById(id).orElse(null);
+    }
 }
