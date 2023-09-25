@@ -32,4 +32,25 @@ public class EnderecoService {
         return pessoa.map(value -> enderecoRepository.findByPessoa(value)).orElse(Collections.emptyList());
     }
 
+    public Endereco definirEnderecoPrincipal(Long pessoaId, Long enderecoId) {
+        Optional<Pessoa> pessoa = pessoaRepository.findById(pessoaId);
+        Optional<Endereco> endereco = enderecoRepository.findById(enderecoId);
+
+        if (pessoa.isPresent() && endereco.isPresent()) {
+            Endereco enderecoAtualizado = endereco.get();
+            enderecoAtualizado.setPrincipal(true);
+
+            List<Endereco> enderecosDaPessoa = pessoa.get().getEnderecos();
+            for (Endereco e : enderecosDaPessoa) {
+                if (!e.equals(enderecoAtualizado)) {
+                    e.setPrincipal(false);
+                }
+            }
+
+            return enderecoRepository.save(enderecoAtualizado);
+        } else {
+            return null;
+        }
+    }
+
 }
