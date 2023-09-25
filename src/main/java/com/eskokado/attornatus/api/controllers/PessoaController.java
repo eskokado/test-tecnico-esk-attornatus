@@ -5,10 +5,7 @@ import com.eskokado.attornatus.api.services.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/pessoas")
@@ -20,5 +17,15 @@ public class PessoaController {
     public ResponseEntity<Pessoa> criarPessoa(@RequestBody Pessoa pessoa) {
         Pessoa pessoaCriada = pessoaService.criarPessoa(pessoa);
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaCriada);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pessoa> editarPessoa(@PathVariable Long id, @RequestBody Pessoa pessoa) {
+        Pessoa pessoaEditada = pessoaService.editarPessoa(id, pessoa);
+        if (pessoaEditada != null) {
+            return ResponseEntity.ok(pessoaEditada);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
