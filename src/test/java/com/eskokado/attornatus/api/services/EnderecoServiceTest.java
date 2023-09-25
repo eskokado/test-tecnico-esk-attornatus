@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,5 +53,38 @@ public class EnderecoServiceTest {
         assertEquals("123", enderecoCriado.getNumero());
         assertEquals("São Paulo", enderecoCriado.getCidade());
         assertEquals(pessoaExistente, enderecoCriado.getPessoa());
+    }
+
+    @Test
+    public void testListarEnderecosDaPessoa() {
+        Long pessoaId = 1L;
+        Pessoa pessoaExistente = new Pessoa();
+        pessoaExistente.setId(pessoaId);
+        pessoaExistente.setNome("Maria");
+
+        Endereco endereco1 = new Endereco();
+        endereco1.setId(1L);
+        endereco1.setLogradouro("Rua X");
+        endereco1.setCep("54321-987");
+        endereco1.setNumero("42");
+        endereco1.setCidade("Rio de Janeiro");
+        endereco1.setPessoa(pessoaExistente);
+
+        Endereco endereco2 = new Endereco();
+        endereco2.setId(2L);
+        endereco2.setLogradouro("Avenida Y");
+        endereco2.setCep("98765-432");
+        endereco2.setNumero("18");
+        endereco2.setCidade("São Paulo");
+        endereco2.setPessoa(pessoaExistente);
+
+        Mockito.when(pessoaRepository.findById(pessoaId)).thenReturn(Optional.of(pessoaExistente));
+        Mockito.when(enderecoRepository.findByPessoa(pessoaExistente)).thenReturn(Arrays.asList(endereco1, endereco2));
+
+        List<Endereco> enderecos = enderecoService.listarEnderecosDaPessoa(pessoaId);
+
+        assertEquals(2, enderecos.size());
+        assertEquals("Rua X", enderecos.get(0).getLogradouro());
+        assertEquals("Avenida Y", enderecos.get(1).getLogradouro());
     }
 }
