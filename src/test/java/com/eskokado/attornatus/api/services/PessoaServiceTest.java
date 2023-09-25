@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,5 +35,26 @@ public class PessoaServiceTest {
 
         assertEquals("João", pessoaCriada.getNome());
         assertEquals(LocalDate.of(1990, 5, 15), pessoaCriada.getDataNascimento());
+    }
+
+    @Test
+    public void testEditarPessoa() {
+        Long pessoaId = 1L;
+        Pessoa pessoaExistente = new Pessoa();
+        pessoaExistente.setId(pessoaId);
+        pessoaExistente.setNome("Maria");
+        pessoaExistente.setDataNascimento(LocalDate.of(1985, 10, 20));
+
+        Pessoa pessoaAtualizada = new Pessoa();
+        pessoaAtualizada.setNome("Maria Silva");
+        pessoaAtualizada.setDataNascimento(LocalDate.of(1985, 10, 21));
+
+        Mockito.when(pessoaRepository.findById(pessoaId)).thenReturn(Optional.of(pessoaExistente));
+        Mockito.when(pessoaRepository.save(Mockito.any(Pessoa.class))).thenReturn(pessoaAtualizada);
+
+        Pessoa pessoaEditada = pessoaService.editarPessoa(pessoaId, pessoaAtualizada);
+
+        assertEquals("Maria Silva", pessoaEditada.getNome());
+        assertEquals(LocalDate.of(1985, 10, 21), pessoaEditada.getDataNascimento());
     }
 }
