@@ -28,4 +28,15 @@ public class PessoaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Pessoa> consultarPessoa(@PathVariable Long id) {
+        Pessoa pessoa = pessoaService.consultarPessoa(id);
+        if (pessoa != null) {
+            return ResponseEntity.ok(pessoa);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
