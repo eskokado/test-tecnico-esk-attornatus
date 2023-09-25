@@ -10,6 +10,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -74,5 +76,26 @@ public class PessoaServiceTest {
         assertNotNull(pessoaConsultada);
         assertEquals("Carlos", pessoaConsultada.getNome());
         assertEquals(LocalDate.of(1998, 3, 10), pessoaConsultada.getDataNascimento());
+    }
+
+    @Test
+    public void testListarPessoas() {
+        Pessoa pessoa1 = new Pessoa();
+        pessoa1.setId(1L);
+        pessoa1.setNome("Ana");
+        pessoa1.setDataNascimento(LocalDate.of(1980, 8, 15));
+
+        Pessoa pessoa2 = new Pessoa();
+        pessoa2.setId(2L);
+        pessoa2.setNome("Pedro");
+        pessoa2.setDataNascimento(LocalDate.of(1995, 6, 25));
+
+        Mockito.when(pessoaRepository.findAll()).thenReturn(Arrays.asList(pessoa1, pessoa2));
+
+        List<Pessoa> pessoas = pessoaService.listarPessoas();
+
+        assertEquals(2, pessoas.size());
+        assertEquals("Ana", pessoas.get(0).getNome());
+        assertEquals("Pedro", pessoas.get(1).getNome());
     }
 }
