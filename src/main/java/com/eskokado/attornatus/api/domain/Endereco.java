@@ -21,4 +21,6 @@ public class Endereco {
     @ManyToOne
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;
+
+    private boolean principal;
 }
