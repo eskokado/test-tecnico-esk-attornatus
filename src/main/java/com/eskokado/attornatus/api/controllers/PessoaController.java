@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/pessoas")
 public class PessoaController {
@@ -39,4 +41,8 @@ public class PessoaController {
         }
     }
 
+    @GetMapping
+    public List<Pessoa> listarPessoas() {
+        return pessoaService.listarPessoas();
+    }
 }
