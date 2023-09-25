@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EnderecoServiceTest {
@@ -86,5 +85,34 @@ public class EnderecoServiceTest {
         assertEquals(2, enderecos.size());
         assertEquals("Rua X", enderecos.get(0).getLogradouro());
         assertEquals("Avenida Y", enderecos.get(1).getLogradouro());
+    }
+
+    @Test
+    public void testDefinirEnderecoPrincipal() {
+        Long pessoaId = 1L;
+        Long enderecoId = 1L;
+
+        Pessoa pessoaExistente = new Pessoa();
+        pessoaExistente.setId(pessoaId);
+        pessoaExistente.setNome("José");
+
+        Endereco enderecoExistente = new Endereco();
+        enderecoExistente.setId(enderecoId);
+        enderecoExistente.setLogradouro("Rua Principal");
+        enderecoExistente.setCep("12345-678");
+        enderecoExistente.setNumero("10");
+        enderecoExistente.setCidade("São Paulo");
+        enderecoExistente.setPrincipal(false);
+        enderecoExistente.setPessoa(pessoaExistente);
+
+        Mockito.when(pessoaRepository.findById(pessoaId)).thenReturn(Optional.of(pessoaExistente));
+        Mockito.when(enderecoRepository.findById(enderecoId)).thenReturn(Optional.of(enderecoExistente));
+        Mockito.when(enderecoRepository.save(Mockito.any(Endereco.class))).thenReturn(enderecoExistente);
+
+        Endereco enderecoPrincipal = enderecoService.definirEnderecoPrincipal(pessoaId, enderecoId);
+
+        assertNotNull(enderecoPrincipal);
+        assertTrue(enderecoPrincipal.isPrincipal());
+        assertEquals("Rua Principal", enderecoPrincipal.getLogradouro());
     }
 }
