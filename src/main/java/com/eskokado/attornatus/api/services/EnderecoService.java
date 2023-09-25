@@ -7,6 +7,8 @@ import com.eskokado.attornatus.api.repositories.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,11 @@ public class EnderecoService {
         } else {
             return null;
         }
+    }
+
+    public List<Endereco> listarEnderecosDaPessoa(Long pessoaId) {
+        Optional<Pessoa> pessoa = pessoaRepository.findById(pessoaId);
+        return pessoa.map(value -> enderecoRepository.findByPessoa(value)).orElse(Collections.emptyList());
     }
 
 }
