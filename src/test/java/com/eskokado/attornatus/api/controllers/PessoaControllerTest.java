@@ -62,4 +62,28 @@ public class PessoaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome", is("Maria")));
     }
+
+    @Test
+    public void testEditarPessoa() throws Exception {
+        Long pessoaId = 1L;
+        Pessoa pessoaExistente = new Pessoa();
+        pessoaExistente.setId(pessoaId);
+        pessoaExistente.setNome("Maria");
+
+        Pessoa pessoaAtualizada = new Pessoa();
+        pessoaAtualizada.setNome("Maria Silva");
+        pessoaAtualizada.setDataNascimento(LocalDate.of(1985, 10, 21));
+
+        Mockito.when(pessoaService.editarPessoa(pessoaId, pessoaAtualizada)).thenReturn(pessoaAtualizada);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/pessoas/{id}", pessoaId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(pessoaAtualizada)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nome", is("Maria Silva")))
+                .andExpect(jsonPath("$.dataNascimento", is("1985-10-21")));
+    }
 }
