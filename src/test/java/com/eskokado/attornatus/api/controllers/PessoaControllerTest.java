@@ -47,4 +47,19 @@ public class PessoaControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.nome", is("João")));
     }
+
+    @Test
+    public void testConsultarPessoa() throws Exception {
+        Long pessoaId = 1L;
+        Pessoa pessoaExistente = new Pessoa();
+        pessoaExistente.setId(pessoaId);
+        pessoaExistente.setNome("Maria");
+
+        Mockito.when(pessoaService.consultarPessoa(pessoaId)).thenReturn(pessoaExistente);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/pessoas/{id}", pessoaId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nome", is("Maria")));
+    }
 }
