@@ -25,7 +25,8 @@ public class EnderecoController {
     }
 
     @GetMapping("/pessoa/{pessoaId}")
-    public List<Endereco> listarEnderecosDaPessoa(@PathVariable Long pessoaId) {
-        return enderecoService.listarEnderecosDaPessoa(pessoaId);
+    public ResponseEntity<List<Endereco>> listarEnderecosDaPessoa(@PathVariable Long pessoaId) {
+        List<Endereco> enderecos = enderecoService.listarEnderecosDaPessoa(pessoaId);
+        return ResponseEntity.ok(enderecos);
     }
 }
