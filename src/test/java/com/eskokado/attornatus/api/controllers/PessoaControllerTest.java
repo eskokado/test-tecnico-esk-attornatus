@@ -15,7 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -85,5 +88,27 @@ public class PessoaControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nome", is("Maria Silva")))
                 .andExpect(jsonPath("$.dataNascimento", is("1985-10-21")));
+    }
+
+    @Test
+    public void testListarPessoas() throws Exception {
+        Pessoa pessoa1 = new Pessoa();
+        pessoa1.setId(1L);
+        pessoa1.setNome("João");
+
+        Pessoa pessoa2 = new Pessoa();
+        pessoa2.setId(2L);
+        pessoa2.setNome("Maria");
+
+        List<Pessoa> pessoas = Arrays.asList(pessoa1, pessoa2);
+
+        Mockito.when(pessoaService.listarPessoas()).thenReturn(pessoas);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/pessoas")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].nome", is("João")))
+                .andExpect(jsonPath("$[1].nome", is("Maria")));
     }
 }
